@@ -1,0 +1,2 @@
+include ':app', ':BaseGameUtilsArioGames'
+project(':BaseGameUtilsArioGames').projectDir = new File('BaseGameUtilsArioGame')

@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">testSDK</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="app_id">642</string>
+    <string name="app_key">92ee6022-8a34-4bbd-99de-2065073e9f39</string>
+    <string name="achievement_id_1">2</string>
+    <string name="achievement_id_2">3</string>
+    <string name="achievement_id_3">4</string>
+    <string name="leaderboard_id">6</string>
+
+    <string name="achievement">Achievement</string>
+    <string name="leaderboard">LeaderBoard</string>
+    <string name="intents">intents</string>
+    <string name="gamepage">GamePage</string>
+    <string name="comment">Comment</string>
+    <string name="developer_games">Developer Games</string>
+    <string name="login">LogIn</string>
+    <string name="check_login">Check Login</string>
+    <string name="screenshot">screenshot</string>
+    <string name="guess_number_game">guess number game</string>
+    <string name="ach_3">full lucky</string>
+    <string name="ach_2">good lucky</string>
+    <string name="ach_1">lucky</string>
+    <string name="achievements">Achievements:</string>
+    <string name="show_all_achievements">Show all achievements</string>
+    <string name="set_steps">set Steps</string>
+    <string name="increment">Increment +1</string>
+    <string name="unlock">Unlock</string>
+    <string name="not_found">notFound</string>
+    <string name="select_achievement">select achievement</string>
+    <string name="write_caption">write caption</string>
+    <string name="start_intent_screenshot">Start Intent (screenshot)</string>
+    <string name="post_screenshot_by_service">Post screenshot by service</string>
+    <string name="show_leaderboard">Show leaderboard</string>
+    <string name="score">score</string>
+    <string name="submit_score">submit score</string>
+    <string name="leaderboard_info">leaderboard info:</string>
+    <string name="top_10_score">Top 10 score:</string>
+</resources>

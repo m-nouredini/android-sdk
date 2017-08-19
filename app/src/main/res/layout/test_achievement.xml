@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_achievements"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/achievements"
+        android:textSize="15sp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_achievements"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/tv_achievements"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:id="@+id/bt_ach1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="@string/ach_1"
+            android:textColor="#000"
+            android:background="@android:drawable/button_onoff_indicator_off"
+            android:layout_margin="8dp"/>
+        <Button
+            android:id="@+id/bt_ach2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ach_2"
+            android:textAllCaps="false"
+            android:textColor="#000"
+            android:background="@android:drawable/button_onoff_indicator_off"
+            android:layout_margin="8dp"/>
+
+        <Button
+            android:id="@+id/bt_ach3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ach_3"
+            android:textAllCaps="false"
+            android:textColor="#000"
+            android:background="@android:drawable/button_onoff_indicator_off"
+            android:layout_margin="8dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_achievement_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_achievements"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="@string/select_achievement"/>
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_achievements"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_below="@+id/tv_achievement_state"
+        android:id="@+id/ll_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:id="@+id/bt_unlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="@string/unlock"
+            android:layout_margin="8dp"/>
+        <Button
+            android:id="@+id/bt_inc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/increment"
+            android:textAllCaps="false"
+            android:layout_margin="8dp"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/bt_all_ach"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/show_all_achievements"
+        android:textAllCaps="false"
+        android:layout_marginTop="32dp"
+        android:layout_below="@+id/ll_btn"
+        />
+
+</RelativeLayout>
