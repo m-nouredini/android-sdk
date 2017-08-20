@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2013 Google Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -46,21 +44,13 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
          * Called when sign-in fails. As a result, a "Sign-In" button can be
          * shown to the user; when that button is clicked, call
          *
-         * @link{GamesHelper#beginUserInitiatedSignIn . Note that not all calls
-         *                                            to this method mean an
-         *                                            error; it may be a result
-         *                                            of the fact that automatic
-         *                                            sign-in could not proceed
-         *                                            because user interaction
-         *                                            was required (consent
-         *                                            dialogs). So
-         *                                            implementations of this
-         *                                            method should NOT display
-         *                                            an error message unless a
-         *                                            call to @link{GamesHelper#
-         *                                            hasSignInError} indicates
-         *                                            that an error indeed
-         *                                            occurred.
+         * @link{GamesHelper#beginUserInitiatedSignIn.
+         * Note that not all calls to this method mean an error;
+         * it may be a result of the fact that automatic sign-in could not proceed
+         * because user interaction was required (consent dialogs).
+         * So implementations of this method should NOT display an error message
+         * unless a call to @link{GamesHelper#hasSignInError} indicates that
+         * an error indeed occurred.
          */
         void onSignInFailed();
 
@@ -98,15 +88,14 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
     // Request code when invoking Activities whose result we don't care about.
     final static int RC_UNUSED = 9002;
 
-    // the Google API client builder we will use to create GoogleApiClient
-    ArioGameApiClient.Builder mGoogleApiClientBuilder = null;
+    // the Ario API client builder we will use to create ArioGameApiClient
+    ArioGameApiClient.Builder mArioApiClientBuilder = null;
 
     // Api options to use when adding each API, null for none
     Games.GamesOptions mGamesApiOptions = Games.GamesOptions.builder().build();
-//    PlusOptions mPlusApiOptions = null
 
-    // Google API client object we manage.
-    ArioGameApiClient mGoogleApiClient = null;
+    // Ario API client object we manage.
+    ArioGameApiClient mArioGameApiClient = null;
 
     // Client request flags
     public final static int CLIENT_NONE = 0x00;
@@ -117,7 +106,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
             | CLIENT_SNAPSHOT;
 
     // What clients were requested? (bit flags)
-    int mRequestedClients = CLIENT_NONE;
+    int mRequestedClients = CLIENT_GAMES;
 
     // Whether to automatically try to sign in on onStart(). We only set this
     // to true when the sign-in process fails or the user explicitly signs out.
@@ -145,26 +134,6 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
     boolean mDebugLog = false;
 
     Handler mHandler;
-
-    /*
-     * If we got an invitation when we connected to the games client, it's here.
-     * Otherwise, it's null.
-     */
-    //TODO: Invitation/TurnBasedMatch/GameRequest must be implement in the sdk. nonce ignored
-
-    //Invitation mInvitation;
-
-    /*
-     * If we got turn-based match when we connected to the games client, it's
-     * here. Otherwise, it's null.
-     */
-    //TurnBasedMatch mTurnBasedMatch;
-
-    /*
-     * If we have incoming requests when we connected to the games client, they
-     * are here. Otherwise, it's null.
-     */
-//    ArrayList<GameRequest> mRequests;
 
     // Listener
     GameHelperListener mListener = null;
@@ -216,7 +185,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
     }
 
     private void doApiOptionsPreCheck() {
-        if (mGoogleApiClientBuilder != null) {
+        if (mArioApiClientBuilder != null) {
             String error = "GameHelper: you cannot call set*ApiOptions after the client "
                     + "builder has been created. Call it before calling createApiClientBuilder() "
                     + "or setup().";
@@ -243,10 +212,10 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
     }
 
     /**
-     * Creates a GoogleApiClient.Builder for use with @link{#setup}. Normally,
+     * Creates a ArioGameApiClient.Builder for use with @link{#setup}. Normally,
      * you do not have to do this; use this method only if you need to make
      * nonstandard setup (e.g. adding extra scopes for other APIs) on the
-     * GoogleApiClient.Builder before calling @link{#setup}.
+     * ArioGameApiClient.Builder before calling @link{#setup}.
      */
     public ArioGameApiClient.Builder createApiClientBuilder() {
         if (mSetupDone) {
@@ -264,7 +233,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
             builder.addScope(Games.SCOPE_GAMES);
         }
 
-        mGoogleApiClientBuilder = builder;
+        mArioApiClientBuilder = builder;
         return builder;
     }
 
@@ -286,31 +255,31 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
         mListener = listener;
         debugLog("Setup: requested clients: " + mRequestedClients);
 
-        if (mGoogleApiClientBuilder == null) {
+        if (mArioApiClientBuilder == null) {
             // we don't have a builder yet, so create one
             createApiClientBuilder();
         }
 
-        mGoogleApiClient = mGoogleApiClientBuilder.build();
-        mGoogleApiClientBuilder = null;
+        mArioGameApiClient = mArioApiClientBuilder.build();
+        mArioApiClientBuilder = null;
         mSetupDone = true;
     }
 
     /**
-     * Returns the GoogleApiClient object. In order to call this method, you
+     * Returns the ArioGameApiClient object. In order to call this method, you
      * must have called @link{setup}.
      */
     public ArioGameApiClient getApiClient() {
-        if (mGoogleApiClient == null) {
+        if (mArioGameApiClient == null) {
             throw new IllegalStateException(
-                    "No GoogleApiClient. Did you call setup()?");
+                    "No ArioGameApiClient. Did you call setup()?");
         }
-        return mGoogleApiClient;
+        return mArioGameApiClient;
     }
 
     /** Returns whether or not the user is signed in. */
     public boolean isSignedIn() {
-        return mGoogleApiClient != null && mGoogleApiClient.isConnected();
+        return mArioGameApiClient != null && mArioGameApiClient.isConnected();
     }
 
     /** Returns whether or not we are currently connecting */
@@ -348,13 +317,13 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
         assertConfigured("onStart");
 
         if (mConnectOnStart) {
-            if (mGoogleApiClient.isConnected()) {
+            if (mArioGameApiClient.isConnected()) {
                 Log.w(TAG,
                         "GameHelper: client was already connected on onStart()");
             } else {
                 debugLog("Connecting client.");
                 mConnecting = true;
-                mGoogleApiClient.connect();
+                mArioGameApiClient.connect();
             }
         } else {
             debugLog("Not attempting to connect becase mConnectOnStart=false");
@@ -372,9 +341,9 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
     public void onStop() {
         debugLog("onStop");
         assertConfigured("onStop");
-        if (mGoogleApiClient.isConnected()) {
+        if (mArioGameApiClient.isConnected()) {
             debugLog("Disconnecting client due to onStop");
-            mGoogleApiClient.disconnect();
+            mArioGameApiClient.disconnect();
         } else {
             debugLog("Client already disconnected when we got onStop.");
         }
@@ -395,7 +364,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
      * @return The id of the invitation, or null if none was received.
      */
     public String getInvitationId() {
-        if (!mGoogleApiClient.isConnected()) {
+        if (!mArioGameApiClient.isConnected()) {
             Log.w(TAG,
                     "Warning: getInvitationId() should only be called when signed in, "
                             + "that is, after getting onSignInSuceeded()");
@@ -414,7 +383,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
      * @return The invitation, or null if none was received.
      */
     public Object getInvitation() {
-        if (!mGoogleApiClient.isConnected()) {
+        if (!mArioGameApiClient.isConnected()) {
             Log.w(TAG,
                     "Warning: getInvitation() should only be called when signed in, "
                             + "that is, after getting onSignInSuceeded()");
@@ -449,7 +418,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
      * @return The match, or null if none was received.
      */
     public Object getTurnBasedMatch() {
-        if (!mGoogleApiClient.isConnected()) {
+        if (!mArioGameApiClient.isConnected()) {
             Log.w(TAG,
                     "Warning: getTurnBasedMatch() should only be called when signed in, "
                             + "that is, after getting onSignInSuceeded()");
@@ -467,7 +436,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
      * @return The requests, or null if none were received.
      */
     public ArrayList<Object> getRequests() {
-        if (!mGoogleApiClient.isConnected()) {
+        if (!mArioGameApiClient.isConnected()) {
             Log.w(TAG, "Warning: getRequests() should only be called "
                     + "when signed in, "
                     + "that is, after getting onSignInSuceeded()");
@@ -492,7 +461,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
 
     /** Sign out and disconnect from the APIs. */
     public void signOut() {
-        if (!mGoogleApiClient.isConnected()) {
+        if (!mArioGameApiClient.isConnected()) {
             // nothing to do
             debugLog("signOut: was already disconnected, ignoring.");
             return;
@@ -507,15 +476,15 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
         // For the games client, signing out means calling signOut and
         // disconnecting
         if (0 != (mRequestedClients & CLIENT_GAMES)) {
-            debugLog("Signing out from the Google API Client.");
-            Games.signOut(mGoogleApiClient);
+            debugLog("Signing out from the Ario API Client.");
+            Games.signOut(mArioGameApiClient);
         }
 
         // Ready to disconnect
         debugLog("Disconnecting client.");
         mConnectOnStart = false;
         mConnecting = false;
-        mGoogleApiClient.disconnect();
+        mArioGameApiClient.disconnect();
     }
 
     /**
@@ -559,7 +528,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
             mUserInitiatedSignIn = false;
             mSignInFailureReason = null; // cancelling is not a failure!
             mConnecting = false;
-            mGoogleApiClient.disconnect();
+            mArioGameApiClient.disconnect();
 
             // increment # of cancellations
             int prevCancellations = getSignInCancellations();
@@ -606,7 +575,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
         mSignInCancelled = false;
         mConnectOnStart = true;
 
-        if (mGoogleApiClient.isConnected()) {
+        if (mArioGameApiClient.isConnected()) {
             // nothing to do
             logWarn("beginUserInitiatedSignIn() called when already connected. "
                     + "Calling listener directly to notify of success.");
@@ -645,7 +614,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
     }
 
     void connect() {
-        if (mGoogleApiClient.isConnected()) {
+        if (mArioGameApiClient.isConnected()) {
             debugLog("Already connected.");
             return;
         }
@@ -653,20 +622,20 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
         mConnecting = true;
 //        mInvitation = null;
 //        mTurnBasedMatch = null;
-        mGoogleApiClient.connect();
+        mArioGameApiClient.connect();
     }
 
     /**
      * Disconnects the API client, then connects again.
      */
     public void reconnectClient() {
-        if (!mGoogleApiClient.isConnected()) {
+        if (!mArioGameApiClient.isConnected()) {
             Log.w(TAG, "reconnectClient() called when client is not connected.");
             // interpret it as a request to connect
             connect();
         } else {
             debugLog("Reconnecting client.");
-            mGoogleApiClient.reconnect();
+            mArioGameApiClient.reconnect();
         }
     }
 
@@ -845,9 +814,9 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
     }
 
     public void disconnect() {
-        if (mGoogleApiClient.isConnected()) {
+        if (mArioGameApiClient.isConnected()) {
             debugLog("Disconnecting client.");
-            mGoogleApiClient.disconnect();
+            mArioGameApiClient.disconnect();
         } else {
             Log.w(TAG,
                     "disconnect() called when client was already disconnected.");
@@ -858,7 +827,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
      * Give up on signing in due to an error. Shows the appropriate error
      * message to the user, using a standard error dialog as appropriate to the
      * cause of the error. That dialog will indicate to the user how the problem
-     * can be solved (for example, re-enable Google Play Services, upgrade to a
+     * can be solved (for example, re-enable Ario Game Services, upgrade to a
      * new version, etc).
      */
     void giveUp(SignInFailureReason reason) {
@@ -876,7 +845,7 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
         notifyListener(false);
     }
 
-    /** Called when we are disconnected from the Google API client. */
+    /** Called when we are disconnected from the Ario API client. */
     @Override
     public void onConnectionSuspended(int cause) {
         debugLog("onConnectionSuspended, cause=" + cause);
@@ -924,8 +893,8 @@ public class GameHelper implements ArioGameApiClient.ConnectionCallbacks,
                         activity, GameHelperUtils.R_LICENSE_FAILED));
                 break;
             default:
-                // No meaningful Activity response code, so generate default Google
-                // Play services dialog
+                // No meaningful Activity response code, so generate default Ario
+                // Game services dialog
                 errorDialog = ArioGameServiceUtil.getErrorDialog(errorCode,
                         activity, RC_UNUSED, null);
                 if (errorDialog == null) {

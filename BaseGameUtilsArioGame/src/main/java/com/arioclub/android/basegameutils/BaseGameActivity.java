@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2013 Google Inc.
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,16 +27,8 @@ import com.arioclub.android.sdk.common.api.ArioGameApiClient;
  * override the @link{#onSignInSucceeded} and @link{#onSignInFailed} abstract
  * methods. To initiate the sign-in flow when the user clicks the sign-in
  * button, subclasses should call @link{#beginUserInitiatedSignIn}. By default,
- * this class only instantiates the GoogleApiClient object. If the PlusClient
- * is also wanted, call the BaseGameActivity(int)
- * constructor and specify the requested clients. For example, to request
- * PlusClient and GamesClient, use BaseGameActivity(CLIENT_GAMES | CLIENT_PLUS).
- * To request all available clients, use BaseGameActivity(CLIENT_ALL).
- * Alternatively, you can also specify the requested clients via
- * @link{#setRequestedClients}, but you must do so before @link{#onCreate}
- * gets called, otherwise the call will have no effect.
+ * this class only instantiates the ArioApiClient object.
  *
- * @author Bruno Oliveira (Google)
  */
 public abstract class BaseGameActivity extends FragmentActivity implements
         GameHelper.GameHelperListener {
@@ -46,13 +36,13 @@ public abstract class BaseGameActivity extends FragmentActivity implements
     // The game helper object. This class is mainly a wrapper around this object.
     protected GameHelper mHelper;
 
-    // We expose these constants here because we don't want users of this class
-    // to have to know about GameHelper at all.
+    // We don't support clients in Ario,
+    // We just keep them to support Google API.
     public static final int CLIENT_GAMES = GameHelper.CLIENT_GAMES;
     public static final int CLIENT_PLUS = GameHelper.CLIENT_PLUS;
     public static final int CLIENT_ALL = GameHelper.CLIENT_ALL;
 
-    // Requested clients. By default, that's just the games client.
+    // By default, that's just the games client.
     protected int mRequestedClients = CLIENT_GAMES;
 
     private final static String TAG = "BaseGameActivity";
@@ -64,27 +54,24 @@ public abstract class BaseGameActivity extends FragmentActivity implements
     }
 
     /**
-     * Constructs a BaseGameActivity with the requested clients.
-     * @param requestedClients The requested clients (a combination of CLIENT_GAMES,
-     *         CLIENT_PLUS).
+     * Constructs a BaseGameActivity with the game client, ignoring the requestedClients param.
+     * @param requestedClients ignored parameter.
      */
     protected BaseGameActivity(int requestedClients) {
         super();
-        setRequestedClients(requestedClients);
+        Log.w(TAG, "requestedClients param ignored, only game client is available.");
+        setRequestedClients(CLIENT_GAMES);
     }
 
     /**
-     * Sets the requested clients. The preferred way to set the requested clients is
-     * via the constructor, but this method is available if for some reason your code
-     * cannot do this in the constructor. This must be called before onCreate or getGameHelper()
-     * in order to have any effect. If called after onCreate()/getGameHelper(), this method
-     * is a no-op.
+     * Sets the requested clients to CLIENT_GAMES Ignoring the requestedClients arg,
+     * this method is here to support Google API.
      *
-     * @param requestedClients A combination of the flags CLIENT_GAMES, CLIENT_PLUS
-     *         or CLIENT_ALL to request all available clients.
+     * @param requestedClients this parameter is ignored and has no effect.
      */
     protected void setRequestedClients(int requestedClients) {
-        mRequestedClients = requestedClients;
+        Log.w(TAG, "requestedClients param ignored, only game client is available.");
+        mRequestedClients = CLIENT_GAMES;
     }
 
     public GameHelper getGameHelper() {

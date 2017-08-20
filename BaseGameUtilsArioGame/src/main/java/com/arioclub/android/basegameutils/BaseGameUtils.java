@@ -80,9 +80,9 @@ public class BaseGameUtils {
         problems.append("The following set up problems were found:\n\n");
 
         // Did the developer forget to change the package name?
-        if (activity.getPackageName().startsWith("com.ariogame.example.games")) {
+        if (activity.getPackageName().startsWith("com.arioclub")) {
             problemFound = true;
-            problems.append("- Package name cannot be com.ariogame.*. You need to change the "
+            problems.append("- Package name cannot be com.arioclub.*. You need to change the "
                     + "sample's package name to your own package.").append("\n");
         }
 
@@ -132,8 +132,8 @@ public class BaseGameUtils {
                         activity.getString(R.string.license_failed));
                 break;
             default:
-                // No meaningful Activity response code, so generate default Google
-                // Play services dialog
+                // No meaningful Activity response code, so generate default Ario
+                // Game services dialog
                 final int errorCode = ArioGameServiceUtil.isArioGameServiceAvailable(activity);
                 errorDialog = ArioGameServiceUtil.getErrorDialog(errorCode,
                         activity, requestCode);
