@@ -1,4 +1,4 @@
-package apackage.test.com.testsdk;
+package com.arioclub.sdk.example;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,7 +18,7 @@ import com.arioclub.android.sdk.games.Games;
 public class MainActivity extends AppCompatActivity implements
         ArioGameApiClient.OnConnectionFailedListener,
         ArioGameApiClient.ConnectionCallbacks,
-        View.OnClickListener{
+        View.OnClickListener {
 
     ArioGameApiClient apiClient;
 
@@ -30,10 +30,10 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         apiClient = new ArioGameApiClient.Builder(this)
-                        .addConnectionCallbacks(this)
-                        .addOnConnectionFailedListener(this)
-                        .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                        .build();
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .build();
 
         findViewById(R.id.bt_achievement).setOnClickListener(this);
         findViewById(R.id.bt_leaderboard).setOnClickListener(this);
@@ -62,51 +62,48 @@ public class MainActivity extends AppCompatActivity implements
 
             case R.id.bt_gamepage:
                 try {
-                    // first param is package name of game
-                    startActivity(Games.GamesMetadata.getGamePageIntent("com.rovio.gold",this));
+                    startActivity(Games.GamesMetadata
+                            .getGamePageIntent(
+                                    /*package name of the game*/ "com.arioclub.android",
+                                    /*Context*/this)
+                    );
                 } catch (PackageManager.NameNotFoundException e) {
-                    // if ario application is not installed on device, this block will be running
                     e.printStackTrace();
-                    Toast.makeText(this, "ario application not installed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.ario_app_is_not_installed), Toast.LENGTH_LONG).show();
                 }
                 break;
 
             case R.id.bt_comment:
                 try {
-                    // first param is package name of game
-                    startActivity(Games.GamesMetadata.getCommentOnGameIntent("com.rovio.gold",this));
+                    startActivity(Games.GamesMetadata
+                            .getCommentOnGameIntent(/*package name of the game*/ "com.arioclub.android", this));
                 } catch (PackageManager.NameNotFoundException e) {
-                    // if ario application is not installed on device, this block will be running
                     e.printStackTrace();
-                    Toast.makeText(this, "ario application not installed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.ario_app_is_not_installed), Toast.LENGTH_LONG).show();
                 }
                 break;
 
             case R.id.bt_developer_games:
                 try {
-                    // first param is developer id
-                    startActivity(Games.GamesMetadata.getDeveloperGamesIntent("22",this));
+                    startActivity(Games.GamesMetadata.getDeveloperGamesIntent(/*developer id*/"22", this));
                 } catch (PackageManager.NameNotFoundException e) {
-                    // if ario application is not installed on device, this block will be running
                     e.printStackTrace();
-                    Toast.makeText(this, "ario application not installed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.ario_app_is_not_installed), Toast.LENGTH_LONG).show();
                 }
                 break;
 
             case R.id.bt_login:
-                //first we are check user's login status with "isLogin" method as below shown
+                // Check user login status
                 new AuthService().isLogin(apiClient).setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(@NonNull Status status) {
-                        // if status.isSuccess() is false that mean user not login into ario application
-                        // so we can show login activity to the user
-                        if (!status.isSuccess()) {
+                        if (!status.isSuccess()) { // user has not signed in
                             try {
+                                //Show login to ario activity
                                 startActivityForResult(Games.GamesMetadata.getLoginIntent(MainActivity.this), LOGIN_REQ);
                             } catch (PackageManager.NameNotFoundException e) {
-                                // if ario application is not installed on device, this block will be running
                                 e.printStackTrace();
-                                Toast.makeText(MainActivity.this, "ario application not installed", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, getString(R.string.ario_app_is_not_installed), Toast.LENGTH_LONG).show();
                             }
                         }
                     }

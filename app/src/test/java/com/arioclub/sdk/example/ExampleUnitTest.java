@@ -1,4 +1,4 @@
-package apackage.test.com.testsdk;
+package com.arioclub.sdk.example;
 
 import org.junit.Test;
 

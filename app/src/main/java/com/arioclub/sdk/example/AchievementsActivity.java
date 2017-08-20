@@ -1,4 +1,4 @@
-package apackage.test.com.testsdk;
+package com.arioclub.sdk.example;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,10 +19,6 @@ import com.arioclub.android.sdk.games.Games;
 import com.arioclub.android.sdk.games.achievement.Achievement;
 import com.arioclub.android.sdk.games.achievement.Achievements;
 
-/**
- * Created by USER
- * on 8/8/2017.
- */
 
 public class AchievementsActivity extends AppCompatActivity implements
         View.OnClickListener,
@@ -31,9 +27,9 @@ public class AchievementsActivity extends AppCompatActivity implements
 
     ArioGameApiClient apiClient;
 
-    Button ach1;
-    Button ach2;
-    Button ach3;
+    Button btAchievement1;
+    Button btAchievement2;
+    Button btAchievement3;
     Button btUnlock;
     Button btIncrement;
     Button btShowAchievements;
@@ -56,9 +52,9 @@ public class AchievementsActivity extends AppCompatActivity implements
                         .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                         .build();
 
-        ach1 = (Button) findViewById(R.id.bt_ach1);
-        ach2 = (Button) findViewById(R.id.bt_ach2);
-        ach3 = (Button) findViewById(R.id.bt_ach3);
+        btAchievement1 = (Button) findViewById(R.id.bt_ach1);
+        btAchievement2 = (Button) findViewById(R.id.bt_ach2);
+        btAchievement3 = (Button) findViewById(R.id.bt_ach3);
         btUnlock = (Button) findViewById(R.id.bt_unlock);
         btIncrement = (Button) findViewById(R.id.bt_inc);
         btShowAchievements = (Button) findViewById(R.id.bt_all_ach);
@@ -71,17 +67,17 @@ public class AchievementsActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_ach1:
-                enableButton(ach1);
+                enableButton(btAchievement1);
                 flagAchievementId = getString(R.string.achievement_id_1);
                 updateState(flagAchievementId);
                 break;
             case R.id.bt_ach2:
-                enableButton(ach2);
+                enableButton(btAchievement2);
                 flagAchievementId = getString(R.string.achievement_id_2);
                 updateState(flagAchievementId);
                 break;
             case R.id.bt_ach3:
-                enableButton(ach3);
+                enableButton(btAchievement3);
                 flagAchievementId = getString(R.string.achievement_id_3);
                 updateState(flagAchievementId);
                 break;
@@ -111,9 +107,9 @@ public class AchievementsActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        ach1.setOnClickListener(this);
-        ach2.setOnClickListener(this);
-        ach3.setOnClickListener(this);
+        btAchievement1.setOnClickListener(this);
+        btAchievement2.setOnClickListener(this);
+        btAchievement3.setOnClickListener(this);
         btUnlock.setOnClickListener(this);
         btIncrement.setOnClickListener(this);
         btShowAchievements.setOnClickListener(this);
@@ -126,14 +122,14 @@ public class AchievementsActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        //if user not singin in ario apiclient can not connect then this method called
-        //we check if failed signin cause of not login so show login activity to login user then
-        //attempt to connect
+        // Connection will fail if user is not signed in,
+        // we should check the ConnectionResult error code and show login activity to user
+        // when error code is equal to ConnectionResult.SIGN_IN_FAILED
         try {
             if (connectionResult.getStatus().getErrorCode() == ConnectionResult.SIGN_IN_FAILED)
                 startActivityForResult(Games.GamesMetadata.getLoginIntent(this), REQUEST_LOGIN);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(TAG, "ario application not installed");
+            Log.d(TAG, getString(R.string.ario_app_is_not_installed));
             e.printStackTrace();
         }
     }
@@ -142,7 +138,7 @@ public class AchievementsActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ACHIEVEMENTS) {
-            Log.d(TAG, "now user be returned from achievement activity");
+            Log.d(TAG, "user returned from achievements activity");
         } else if (requestCode == REQUEST_LOGIN) {
             apiClient.connect();
         }
@@ -150,14 +146,14 @@ public class AchievementsActivity extends AppCompatActivity implements
 
     private void enableButton(Button button) {
         button.setBackgroundResource(android.R.drawable.button_onoff_indicator_on);
-        if (!button.equals(ach1)) {
-            ach1.setBackgroundResource(android.R.drawable.button_onoff_indicator_off);
+        if (!button.equals(btAchievement1)) {
+            btAchievement1.setBackgroundResource(android.R.drawable.button_onoff_indicator_off);
         }
-        if (!button.equals(ach2)) {
-            ach2.setBackgroundResource(android.R.drawable.button_onoff_indicator_off);
+        if (!button.equals(btAchievement2)) {
+            btAchievement2.setBackgroundResource(android.R.drawable.button_onoff_indicator_off);
         }
-        if (!button.equals(ach3)) {
-            ach3.setBackgroundResource(android.R.drawable.button_onoff_indicator_off);
+        if (!button.equals(btAchievement3)) {
+            btAchievement3.setBackgroundResource(android.R.drawable.button_onoff_indicator_off);
         }
     }
 

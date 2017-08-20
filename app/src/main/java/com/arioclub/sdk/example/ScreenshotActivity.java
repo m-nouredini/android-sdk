@@ -1,4 +1,4 @@
-package apackage.test.com.testsdk;
+package com.arioclub.sdk.example;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,22 +12,17 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.arioclub.android.sdk.auth.AuthService;
 import com.arioclub.android.sdk.common.ConnectionResult;
 import com.arioclub.android.sdk.common.api.ArioGameApiClient;
 import com.arioclub.android.sdk.common.api.ResultCallback;
 import com.arioclub.android.sdk.common.api.Status;
 import com.arioclub.android.sdk.games.Games;
 
-/**
- * Created by USER
- * on 8/12/2017.
- */
 
 public class ScreenshotActivity extends AppCompatActivity implements
         View.OnClickListener,
         ArioGameApiClient.OnConnectionFailedListener,
-        ArioGameApiClient.ConnectionCallbacks{
+        ArioGameApiClient.ConnectionCallbacks {
 
     ArioGameApiClient apiClient;
 
@@ -42,11 +37,11 @@ public class ScreenshotActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_screenshot);
 
-        apiClient  = new ArioGameApiClient.Builder(this)
-                        .addConnectionCallbacks(this)
-                        .addOnConnectionFailedListener(this)
-                        .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                        .build();
+        apiClient = new ArioGameApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .build();
 
         etCaption = (EditText) findViewById(R.id.et_caption);
 
@@ -77,14 +72,14 @@ public class ScreenshotActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        //if user not singin in ario apiclient can not connect then this method called
-        //we check if failed signin cause of not login so show login activity to login user then
-        //attempt to connect
+        // Connection will fail if user is not signed in,
+        // we should check the ConnectionResult error code and show login activity to user
+        // when error code is equal to ConnectionResult.SIGN_IN_FAILED
         try {
             if (connectionResult.getStatus().getErrorCode() == ConnectionResult.SIGN_IN_FAILED)
                 startActivityForResult(Games.GamesMetadata.getLoginIntent(this), REQUEST_LOGIN);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(TAG, "ario application not installed");
+            Log.d(TAG, getString(R.string.ario_app_is_not_installed));
             e.printStackTrace();
         }
     }
@@ -93,8 +88,8 @@ public class ScreenshotActivity extends AppCompatActivity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_intent_screenshot:
-                    startActivityForResult(Games.Screenshot.getScreenshotIntent(apiClient, takeScreenShot(), etCaption.getText().toString())
-                            ,  REQUEST_SCREENSHOT);
+                startActivityForResult(Games.Screenshot.getScreenshotIntent(apiClient, takeScreenShot(),
+                        etCaption.getText().toString()), REQUEST_SCREENSHOT);
                 break;
 
             case R.id.bt_service_screenshot:
@@ -102,16 +97,18 @@ public class ScreenshotActivity extends AppCompatActivity implements
                     Toast.makeText(this, "write caption!", Toast.LENGTH_SHORT).show();
                 } else {
                     Games.Screenshot.postScreenShot(apiClient, takeScreenShot(), etCaption.getText().toString())
-                                                    .setResultCallback(new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(@NonNull Status status) {
-                            Log.d(TAG, "now user be returned from screenshot activity");
-                            if (status.isSuccess())
-                                Toast.makeText(ScreenshotActivity.this, "posting image successful", Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(ScreenshotActivity.this, "posting image unsuccessful", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            .setResultCallback(new ResultCallback<Status>() {
+                                @Override
+                                public void onResult(@NonNull Status status) {
+                                    Log.d(TAG, "user returned from screenshot activity");
+                                    if (status.isSuccess())
+                                        Toast.makeText(ScreenshotActivity.this, "image posted successfully",
+                                                Toast.LENGTH_SHORT).show();
+                                    else
+                                        Toast.makeText(ScreenshotActivity.this, "posting image failed",
+                                                Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
                 break;
         }
@@ -121,7 +118,7 @@ public class ScreenshotActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_SCREENSHOT) {
-            Log.d(TAG, "now user be returned from screenshot activity");
+            Log.d(TAG, "user returned from screenshot activity");
         } else if (requestCode == REQUEST_LOGIN) {
             apiClient.connect();
         }

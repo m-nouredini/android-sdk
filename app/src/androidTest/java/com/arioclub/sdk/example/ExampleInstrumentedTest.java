@@ -1,4 +1,4 @@
-package apackage.test.com.testsdk;
+package com.arioclub.sdk.example;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("apackage.test.com.testsdk", appContext.getPackageName());
+        assertEquals("com.arioclub.sdk.example", appContext.getPackageName());
     }
 }

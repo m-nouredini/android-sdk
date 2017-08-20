@@ -1,4 +1,4 @@
-package apackage.test.com.testsdk;
+package com.arioclub.sdk.example;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,10 +22,6 @@ import com.arioclub.android.sdk.games.leaderboard.LeaderboardScore;
 import com.arioclub.android.sdk.games.leaderboard.LeaderboardVariant;
 import com.arioclub.android.sdk.games.leaderboard.Leaderboards;
 
-/**
- * Created by USER
- * on 8/13/2017.
- */
 
 public class LeaderboardActivity extends AppCompatActivity implements
         View.OnClickListener,
@@ -106,14 +102,14 @@ public class LeaderboardActivity extends AppCompatActivity implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        //if user not singin in ario apiclient can not connect then this method called
-        //we check if failed signin cause of not login so show login activity to login user then
-        //attempt to connect
+        // Connection will fail if user is not signed in,
+        // we should check the ConnectionResult error code and show login activity to user
+        // when error code is equal to ConnectionResult.SIGN_IN_FAILED
         try {
             if (connectionResult.getStatus().getErrorCode() == ConnectionResult.SIGN_IN_FAILED)
                 startActivityForResult(Games.GamesMetadata.getLoginIntent(this), REQUEST_LOGIN);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.d(TAG, "ario application not installed");
+            Log.d(TAG, getString(R.string.ario_app_is_not_installed));
             e.printStackTrace();
         }
     }

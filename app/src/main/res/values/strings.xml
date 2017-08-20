@@ -38,4 +38,9 @@
     <string name="submit_score">submit score</string>
     <string name="leaderboard_info">leaderboard info:</string>
     <string name="top_10_score">Top 10 score:</string>
+    <string name="ario_app_is_not_installed">Ario is not installed</string>
+    <string name="guess">حدس بزن!</string>
+    <string name="correct_the_answer_was_number_d">درسته! جواب %d بود</string>
+    <string name="wrong_the_answer_was_number_d">نه! جواب %d بود</string>
+    <string name="wrong_guess_another_num">اشتباهه، یه عدد دیگه حدس بزن!</string>
 </resources>
